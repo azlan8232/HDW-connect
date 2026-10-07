@@ -29,6 +29,12 @@ Serve that folder from a secure HTTPS address. Phones must open that address onc
 
 The service worker caches only app resources; patient records stay in the app's encrypted browser storage on that device. Offline use does not synchronize records between devices. Browser data can be lost if the browser profile or site data is cleared, so keep encrypted backups.
 
+## Deploy to Netlify
+
+Netlify uses `netlify.toml` to run `bun run build` and publish `dist/client`. On Netlify (`NETLIFY=true`), the build skips Nitro's server deployment adapter and uses TanStack Start's standard server output in `dist/server` to prerender the static SPA shell. The existing `_redirects` file routes direct navigation to `/_shell.html`; no SSR function is deployed. Patient storage and offline behavior are unchanged.
+
+Other build environments keep the existing Nitro configuration and output layout, including the GitHub Pages workflow. Dependencies are installed from the checked-in text-format `bun.lock` using Bun 1.3.12 on Netlify.
+
 ## Publish to GitHub Pages
 
 The `Deploy GitHub Pages` workflow builds and publishes the static app whenever a commit reaches `main`. In the repository, open **Settings → Pages** and set the build source to **GitHub Actions**. The workflow publishes `.output/public` and creates a `404.html` fallback for app routes.

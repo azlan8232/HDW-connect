@@ -6,9 +6,20 @@
 // You can pass additional config via defineConfig({ vite: { ... }, etc... }) if needed.
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 
+const isNetlify = process.env.NETLIFY === "true";
+
 export default defineConfig({
+  nitro: isNetlify ? false : undefined,
   vite: {
     base: process.env.VITE_BASE_PATH ?? "/",
+    ...(isNetlify
+      ? {
+          environments: {
+            client: { build: { outDir: "dist/client" } },
+            ssr: { build: { outDir: "dist/server" } },
+          },
+        }
+      : {}),
   },
   tanstackStart: {
     // Emit a static client shell so direct routes can load from the service
