@@ -29,6 +29,12 @@ Serve that folder from a secure HTTPS address. Phones must open that address onc
 
 The service worker caches only app resources; patient records stay in the app's encrypted browser storage on that device. Offline use does not synchronize records between devices. Browser data can be lost if the browser profile or site data is cleared, so keep encrypted backups.
 
+## Publish to Netlify
+
+The repository's `netlify.toml` configures the build command and publishes `.output/public`. The Vite configuration keeps that public output directory consistent across deployment targets. Nitro's `cloudflare-module` preset is explicitly selected for build-time app-shell prerendering because the Lovable preview adapter requires an `index.mjs` entry with a `fetch` handler. Netlify serves the generated static public files, not the Cloudflare server bundle. Netlify builds use `/` as the base path, and the existing `_redirects` file serves the app shell for direct links to patient and document routes.
+
+Patient records remain in browser storage on each device; deploying the app does not upload or synchronize them. Use encrypted backups before clearing browser data or moving to another device or site address.
+
 ## Publish to GitHub Pages
 
 The `Deploy GitHub Pages` workflow builds and publishes the static app whenever a commit reaches `main`. In the repository, open **Settings → Pages** and set the build source to **GitHub Actions**. The workflow publishes `.output/public` and creates a `404.html` fallback for app routes.
