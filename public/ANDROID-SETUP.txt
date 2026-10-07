@@ -1,0 +1,36 @@
+HDW CONNECT — Android local setup
+
+This starts the PWA on the Android phone itself. App files are served only from
+the phone's localhost address; this script does not open a connection to other
+devices. The first setup needs internet to install Termux and Python. After the
+PWA has loaded and installed once, it can open offline.
+
+1. Install Termux from its official F-Droid page:
+   https://f-droid.org/packages/com.termux/
+   Do not use an APK from an unknown download site.
+
+2. In Android Files, extract the HDW CONNECT PWA ZIP into Downloads. Keep the
+   extracted folder named "hdw-connect-pwa" for the command below.
+
+3. Open Termux. Type this command, then tap Enter:
+   termux-setup-storage
+   Tap Allow if Android asks for file access.
+
+4. Install Python (internet is needed for this one-time setup). Type:
+   pkg update -y && pkg install python -y
+
+5. Start the local app server. Type:
+   cd ~/storage/downloads/hdw-connect-pwa && bash start-android.sh
+
+6. Leave Termux running. Open Chrome and enter:
+   http://localhost:8765
+
+7. In Chrome, tap the three-dot menu and choose "Install app" or "Add to Home
+   screen". Wait for the first app load to finish.
+
+8. Open HDW CONNECT from the new home-screen icon. The service worker saves the
+   app files for offline launch. Keep the PWA ZIP as the installation copy; to
+   update the app later, replace the files and repeat the local start/load step.
+
+The patient records are stored separately in this Chrome app's encrypted local
+browser storage. They are not included in the ZIP and do not sync to the PC.
