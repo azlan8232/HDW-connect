@@ -36,7 +36,7 @@ function ErrorComponent({ reset }: ErrorComponentProps) {
         <h1 className="text-xl font-semibold text-foreground">This page didn't load</h1>
         <div className="mt-6 flex justify-center gap-2">
           <button onClick={() => { router.invalidate(); reset(); }} className="btn">Try again</button>
-          <a href="/" className="btn btn-outline">Go home</a>
+          <a href={import.meta.env.BASE_URL} className="btn btn-outline">Go home</a>
         </div>
       </div>
     </div>
@@ -59,9 +59,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     ],
     links: [
       { rel: "stylesheet", href: appCss },
-      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
-      { rel: "manifest", href: "/manifest.webmanifest" },
-      { rel: "apple-touch-icon", href: "/icons/apple-touch-icon.png", sizes: "180x180" },
+      { rel: "icon", href: `${import.meta.env.BASE_URL}favicon.ico`, type: "image/x-icon" },
+      { rel: "manifest", href: `${import.meta.env.BASE_URL}manifest.webmanifest` },
+      { rel: "apple-touch-icon", href: `${import.meta.env.BASE_URL}icons/apple-touch-icon.png`, sizes: "180x180" },
     ],
   }),
   shellComponent: RootShell,
@@ -84,7 +84,7 @@ function RootComponent() {
   const { ready, storageError } = useDB();
   useEffect(() => {
     if ("serviceWorker" in navigator) {
-      void navigator.serviceWorker.register("/service-worker.js", { scope: "/" }).catch((error) => {
+      void navigator.serviceWorker.register(`${import.meta.env.BASE_URL}service-worker.js`, { scope: import.meta.env.BASE_URL }).catch((error) => {
         console.warn("HDW CONNECT offline support could not be enabled.", error);
       });
     }

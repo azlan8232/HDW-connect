@@ -29,10 +29,15 @@ Serve that folder from a secure HTTPS address. Phones must open that address onc
 
 The service worker caches only app resources; patient records stay in the app's encrypted browser storage on that device. Offline use does not synchronize records between devices. Browser data can be lost if the browser profile or site data is cleared, so keep encrypted backups.
 
+## Publish to GitHub Pages
+
+The `Deploy GitHub Pages` workflow builds and publishes the static app whenever a commit reaches `main`. In the repository, open **Settings → Pages** and set the build source to **GitHub Actions**. The workflow publishes `.output/public` and creates a `404.html` fallback for app routes.
+
+This repository is configured as a GitHub Pages project site at `/HDW-connect/`. The build sets that base path for assets, routing, the web manifest, and service worker. The published site is publicly reachable even though this source repository is private. Use synthetic or de-identified data unless an approved clinical environment is in use; each device still stores its own records locally.
+
 ## Built with
 
 - TanStack Start
 - TypeScript
 - React
 - Tailwind CSS
-
