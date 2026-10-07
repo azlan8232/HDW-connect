@@ -35,6 +35,12 @@ The `Deploy GitHub Pages` workflow builds and publishes the static app whenever 
 
 This repository is configured as a GitHub Pages project site at `/HDW-connect/`. The build sets that base path for assets, routing, the web manifest, and service worker. The published site is publicly reachable even though this source repository is private. Use synthetic or de-identified data unless an approved clinical environment is in use; each device still stores its own records locally.
 
+## Publish to Netlify
+
+Netlify runs `bun run build` and publishes `dist/client`, as configured in `netlify.toml`. On Netlify, the build skips Nitro's server adapter and uses TanStack Start's server output only to prerender the static SPA shell. The published `_redirects` file routes page requests to `_shell.html`, preserving direct links and offline installation without deploying a server function. Lovable and GitHub Pages builds retain their existing Nitro configuration.
+
+Install dependencies with `bun install --frozen-lockfile` to use the checked-in text-format `bun.lock` without resolving new dependency versions.
+
 ## Built with
 
 - TanStack Start

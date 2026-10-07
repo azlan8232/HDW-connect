@@ -7,6 +7,7 @@
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 
 export default defineConfig({
+  nitro: process.env.NETLIFY === "true" ? false : undefined,
   vite: {
     base: process.env.VITE_BASE_PATH ?? "/",
   },
