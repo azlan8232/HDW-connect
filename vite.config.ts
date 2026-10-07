@@ -7,6 +7,10 @@
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 
 export default defineConfig({
+  nitro: {
+    preset: "cloudflare-module",
+    output: { publicDir: ".output/public" },
+  },
   vite: {
     base: process.env.VITE_BASE_PATH ?? "/",
   },
