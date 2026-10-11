@@ -7,6 +7,9 @@
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 
 export default defineConfig({
+  vite: {
+    base: process.env.VITE_BASE_PATH ?? "/",
+  },
   tanstackStart: {
     // Emit a static client shell so direct routes can load from the service
     // worker after the first online visit.

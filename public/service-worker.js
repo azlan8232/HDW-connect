@@ -1,12 +1,13 @@
-const CACHE_NAME = "hdw-connect-shell-v1";
-const SHELL_URL = "/_shell.html";
+const CACHE_NAME = "hdw-connect-shell-v7";
+const BASE_URL = new URL("./", self.location.href).pathname;
+const SHELL_URL = `${BASE_URL}_shell.html`;
 const CORE_URLS = [
   SHELL_URL,
-  "/manifest.webmanifest",
-  "/favicon.ico",
-  "/icons/icon-192.png",
-  "/icons/icon-512.png",
-  "/icons/apple-touch-icon.png",
+  `${BASE_URL}manifest.webmanifest`,
+  `${BASE_URL}favicon.ico`,
+  `${BASE_URL}icons/icon-192.png`,
+  `${BASE_URL}icons/icon-512.png`,
+  `${BASE_URL}icons/apple-touch-icon.png`,
 ];
 
 self.addEventListener("install", (event) => {
@@ -20,7 +21,10 @@ self.addEventListener("install", (event) => {
     const shellText = await shellResponse.text();
     const assets = [...shellText.matchAll(/(?:src|href)=["']([^"']+\.(?:js|css)(?:\?[^"']*)?)["']/g)]
       .map((match) => new URL(match[1], self.location.origin).href)
-      .filter((url) => new URL(url).origin === self.location.origin);
+      .filter((url) => {
+        const asset = new URL(url);
+        return asset.origin === self.location.origin && asset.pathname.startsWith(BASE_URL);
+      });
     await Promise.allSettled([...CORE_URLS.filter((url) => url !== SHELL_URL), ...assets].map(async (url) => {
       const response = await fetch(url, { cache: "reload" });
       if (response.ok) await cache.put(url, response);
@@ -40,12 +44,17 @@ self.addEventListener("activate", (event) => {
 self.addEventListener("fetch", (event) => {
   const request = event.request;
   const url = new URL(request.url);
-  if (request.method !== "GET" || url.origin !== self.location.origin) return;
+  // Never intercept or cache authenticated backend requests, even if a URL
+  // resembles an asset or is opened as a navigation.
+  if (url.pathname.startsWith("/.netlify/functions/")) return;
+  if (request.method !== "GET" || url.origin !== self.location.origin || !url.pathname.startsWith(BASE_URL)) return;
 
   if (request.mode === "navigate") {
     event.respondWith((async () => {
       try {
-        return await fetch(request);
+        const response = await fetch(request);
+        if (response.status !== 404) return response;
+        return (await caches.match(SHELL_URL)) || response;
       } catch {
         const shell = await caches.match(SHELL_URL);
         return shell || new Response("HDW CONNECT has not been opened online on this device yet. Reconnect once to finish offline setup.", {

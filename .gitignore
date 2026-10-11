@@ -22,6 +22,8 @@ hdw-connect-pwa.zip
 # Wrangler / Cloudflare
 .wrangler/
 .dev.vars
+.netlify/
+.tmp/
 
 # Editor directories and files
 .vscode/*
