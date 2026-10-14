@@ -47,7 +47,7 @@ export interface Pending { id: string; task: string; status: string; action: str
 export interface Med { id: string; name: string; dose: string; route: string; freq: string; status: MedStatus; note: string }
 export interface Investigation { id: string; date: string; details: string }
 export type AVPU = "Alert" | "Reacts to voice" | "Reacts to pain" | "Unresponsive";
-export interface CurrentCondition { bloodPressure: string; heartRate: string; respiratoryRate: string; spo2: string; oxygenModality: string; avpu: AVPU | ""; other: string }
+export interface CurrentCondition { sofa2: string; bloodPressure: string; heartRate: string; respiratoryRate: string; spo2: string; oxygenModality: string; avpu: AVPU | ""; other: string }
 
 export interface Referral { id: string; service: string; urgency: string; reason: string; question: string; findings: string; legacyInvestigations?: string; investigationIds: string[]; treatmentTried: string; request: string; clinician: string; contact: string; outcome: string }
 
@@ -79,7 +79,7 @@ export interface Patient {
   name: string; mrn: string; ic: string; age: string; sex: string; bed: string;
   admissionDate: string; hdwAdmissionDate: string; source: string; team: string; consultant: string;
   allergies: string;
-  presentingProblem: string; hdwReason: string; primaryDx: string; comorbidities: string;
+  presentingProblem: string; admissionSofa2: string; hdwReason: string; primaryDx: string; comorbidities: string;
   events: string; progress: string; currentCondition: CurrentCondition;
   interventions: string[]; devices: string;
   problems: Problem[]; pending: Pending[]; meds: Med[]; investigations: Investigation[];

@@ -6,7 +6,7 @@ export interface ReferralDocumentData {
   sections: {
     diagnoses?: { main: string };
     comorbidities?: string;
-    history?: { presentingProblem: string; hdwReason: string };
+    history?: { presentingProblem: string; admissionSofa2: string; hdwReason: string };
     currentCondition?: CurrentCondition;
     findings?: string;
     investigations?: Investigation[];
@@ -38,7 +38,7 @@ export function selectReferralDocumentData(patient: Patient, referral: ReferralR
     switch (section) {
       case "diagnoses": sections.diagnoses = { main: patient.primaryDx }; break;
       case "comorbidities": sections.comorbidities = patient.comorbidities; break;
-      case "history": sections.history = { presentingProblem: patient.presentingProblem, hdwReason: patient.hdwReason }; break;
+      case "history": sections.history = { presentingProblem: patient.presentingProblem, admissionSofa2: patient.admissionSofa2, hdwReason: patient.hdwReason }; break;
       case "currentCondition": sections.currentCondition = patient.currentCondition; break;
       case "findings": sections.findings = referral.findings; break;
       case "investigations": sections.investigations = patient.investigations.filter((item) => referral.investigationIds.includes(item.id)); break;

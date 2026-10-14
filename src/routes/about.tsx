@@ -162,9 +162,18 @@ function About() {
       )
         return;
       const contents = await createTransferPackage(selectedIds);
+      const patientName = patients.find((patient) => patient.id === selectedIds[0])?.name;
+      const filenameName = (patientName || "Unnamed patient")
+        .trim()
+        .replace(/[<>:"/\\|?*\u0000-\u001f]/g, "-")
+        .replace(/\s+/g, "-")
+        .replace(/-+/g, "-")
+        .replace(/^[.\-]+|[.\-]+$/g, "")
+        .slice(0, 150) || "Unnamed-patient";
+      const additionalPatients = selectedIds.length > 1 ? `-and-${selectedIds.length - 1}-more` : "";
       downloadFile(
         contents,
-        `hdw-connect-transfer-${new Date().toISOString().slice(0, 16).replace(":", "")}.hdwtransfer`,
+        `${filenameName}${additionalPatients}.hdwtransfer`,
         "application/vnd.hdw-connect.transfer+json",
       );
       setMsg(

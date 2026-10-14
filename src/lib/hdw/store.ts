@@ -67,8 +67,8 @@ export function blankPatient(): Patient {
     id: uid(), name: "", mrn: "", ic: "", age: "", sex: "", bed: "",
     admissionDate: "", hdwAdmissionDate: "", source: "", team: "", consultant: "",
     allergies: "",
-    presentingProblem: "", hdwReason: "", primaryDx: "", comorbidities: "",
-    events: "", progress: "", currentCondition: { bloodPressure: "", heartRate: "", respiratoryRate: "", spo2: "", oxygenModality: "", avpu: "", other: "" },
+    presentingProblem: "", admissionSofa2: "", hdwReason: "", primaryDx: "", comorbidities: "",
+    events: "", progress: "", currentCondition: { sofa2: "", bloodPressure: "", heartRate: "", respiratoryRate: "", spo2: "", oxygenModality: "", avpu: "", other: "" },
     interventions: [], devices: "",
     problems: [], pending: [], meds: [], investigations: [],
     referrals: [],
@@ -112,10 +112,10 @@ function migrateDocState(value: unknown, label: string, depth: number): DocState
 function migratePatient(value: unknown, depth = 0): Patient {
   if (depth > 20) throw new Error("Backup contains nested document snapshots that are too deep");
   if (!isRecord(value) || typeof value.id !== "string" || !value.id) throw new Error("A patient record is missing its ID");
-  hasTextFields(value, ["name", "mrn", "ic", "age", "sex", "bed", "admissionDate", "hdwAdmissionDate", "source", "team", "consultant", "allergies", "presentingProblem", "hdwReason", "primaryDx", "secondaryDx", "comorbidities", "events", "procedures", "organSupport", "progress", "devices", "createdAt", "updatedAt"], `Patient ${value.id}`);
+  hasTextFields(value, ["name", "mrn", "ic", "age", "sex", "bed", "admissionDate", "hdwAdmissionDate", "source", "team", "consultant", "allergies", "presentingProblem", "admissionSofa2", "hdwReason", "primaryDx", "secondaryDx", "comorbidities", "events", "procedures", "organSupport", "progress", "devices", "createdAt", "updatedAt"], `Patient ${value.id}`);
   if (value.currentCondition !== undefined && typeof value.currentCondition !== "string" && !isRecord(value.currentCondition)) throw new Error(`Patient ${value.id} has invalid current condition data`);
   if (isRecord(value.currentCondition)) {
-    hasTextFields(value.currentCondition, ["bloodPressure", "heartRate", "respiratoryRate", "spo2", "oxygenModality", "avpu", "other"], "Current condition data");
+    hasTextFields(value.currentCondition, ["sofa2", "bloodPressure", "heartRate", "respiratoryRate", "spo2", "oxygenModality", "avpu", "other"], "Current condition data");
     if (value.currentCondition.avpu !== undefined && !["", "Alert", "Reacts to voice", "Reacts to pain", "Unresponsive"].includes(String(value.currentCondition.avpu))) throw new Error(`Patient ${value.id} has an invalid AVPU value`);
   }
   for (const key of ["problems", "pending", "meds"] as const) {
@@ -244,7 +244,7 @@ function demoPatient(): Patient {
     comorbidities: "Type 2 diabetes mellitus, hypertension",
     events: "Required HFNC for 48 hours. Brief noradrenaline support (<24h) on day 1.",
     progress: "Afebrile for 48 hours. Oxygen weaned to 2 L/min nasal prong. Creatinine improving.",
-    currentCondition: { bloodPressure: "118/72", heartRate: "88", respiratoryRate: "20", spo2: "96", oxygenModality: "Nasal prong 2 L/min", avpu: "Alert", other: "Haemodynamically stable off vasopressors." },
+    currentCondition: { sofa2: "", bloodPressure: "118/72", heartRate: "88", respiratoryRate: "20", spo2: "96", oxygenModality: "Nasal prong 2 L/min", avpu: "Alert", other: "Haemodynamically stable off vasopressors." },
     interventions: ["Oxygen therapy", "HFNC", "Vasopressor/inotrope", "Central venous catheter", "Antimicrobial therapy"],
     devices: "Right IJ central venous catheter inserted 29/09.\nRight IJ CVC (day 7) — plan removal before transfer. Peripheral IV left forearm.",
     problems: [

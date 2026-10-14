@@ -173,6 +173,7 @@ function CurrentConditionRows({ condition }: { condition: CurrentCondition }) {
     <Row k="SpO₂" v={condition.spo2 ? `${condition.spo2}%` : ""} />
     <Row k="Oxygen modality" v={condition.oxygenModality} />
     <Row k="AVPU" v={condition.avpu} />
+    {condition.sofa2 && <Row k="SOFA2 score at transfer or discharge" v={condition.sofa2} />}
     <Row k="Other information" v={condition.other} />
   </>;
 }
@@ -220,7 +221,7 @@ function Referral({ data }: { data: ReturnType<typeof selectReferralDocumentData
       <Sec title="Clinical question / request"><p className="font-semibold"><V v={r.question} /></p><div className="mt-1"><V v={r.request} /></div></Sec>
       {sections.diagnoses && <Sec title="Main diagnoses"><V v={sections.diagnoses.main} /></Sec>}
       {sections.comorbidities !== undefined && <Sec title="Comorbidities"><V v={sections.comorbidities} /></Sec>}
-      {sections.history && <Sec title="Relevant history"><V v={[sections.history.presentingProblem, sections.history.hdwReason].filter(Boolean).join("\n")} /></Sec>}
+      {sections.history && <Sec title="Relevant history"><V v={[sections.history.presentingProblem, sections.history.hdwReason].filter(Boolean).join("\n")} />{sections.history.admissionSofa2 && <Row k="SOFA2 score on admission" v={sections.history.admissionSofa2} />}</Sec>}
       {sections.currentCondition !== undefined && <Sec title="Current clinical status"><CurrentConditionRows condition={sections.currentCondition} /></Sec>}
       {sections.findings !== undefined && <Sec title="Relevant findings"><V v={sections.findings} /></Sec>}
       {sections.investigations !== undefined && <Sec title="Relevant investigations"><InvestigationTable rows={sections.investigations} /></Sec>}
@@ -254,7 +255,7 @@ function Transfer({ data }: { data: ReturnType<typeof selectTransferDocumentData
         <Row k="Date / time" v={fmt(t.datetime)} /><Row k="Responsible service" v={t.responsible} />
       </Sec>
       <Sec title="Reason for HDW admission"><V v={p.hdwReason} /></Sec>
-      <Sec title="Main diagnoses"><Row k="Main diagnoses" v={p.primaryDx} /></Sec>
+      <Sec title="Main diagnoses"><Row k="Main diagnoses" v={p.primaryDx} />{p.admissionSofa2 && <Row k="SOFA2 score on admission" v={p.admissionSofa2} />}</Sec>
       <Sec title="Significant HDW events & interventions">
         <V v={[p.events, p.interventions.length ? `HDW interventions: ${p.interventions.join(", ")}` : ""].filter(Boolean).join("\n")} />
       </Sec>
@@ -281,11 +282,11 @@ function Discharge({ data }: { data: ReturnType<typeof selectDischargeDocumentDa
     <>
       <Sec title="Episode"><Row k="Discharge date" v={fmt(d.date)} /><Row k="Responsible service" v={p.team} /><Row k="Consultant" v={p.consultant} /></Sec>
       <Sec title="Reason for admission"><V v={p.presentingProblem} /></Sec>
-      <Sec title="Diagnoses"><Row k="Main diagnoses" v={p.primaryDx} /><Row k="Comorbidities" v={p.comorbidities} /></Sec>
+      <Sec title="Diagnoses"><Row k="Main diagnoses" v={p.primaryDx} />{p.admissionSofa2 && <Row k="SOFA2 score on admission" v={p.admissionSofa2} />}<Row k="Comorbidities" v={p.comorbidities} /></Sec>
       <Sec title="Significant HDW events & interventions"><V v={[p.events, p.interventions.length ? `HDW interventions: ${p.interventions.join(", ")}` : "", p.devices].filter(Boolean).join("\n")} /></Sec>
       <Sec title="Relevant investigations"><InvestigationTable rows={data.investigations} /></Sec>
       <Sec title="Clinical progress"><V v={p.progress} /></Sec>
-      <Sec title="Condition at discharge"><V v={d.condition} /></Sec>
+      <Sec title="Condition at discharge"><V v={d.condition} />{p.currentCondition.sofa2 && <Row k="SOFA2 score at discharge" v={p.currentCondition.sofa2} />}</Sec>
       <Sec title="Medication reconciliation"><Table head={["Medication", "Dose / route / freq", "Status", "Note"]} rows={data.medications.map((m) => [m.name, [m.dose, m.route, m.freq].filter(Boolean).join(" "), m.status, m.note])} /></Sec>
       <Sec title="Pending results"><Table head={["Item", "Status", "Action", "Responsible", "Timing"]} rows={data.pending.map((t) => [t.task, t.status, t.action, t.responsible, t.timing])} /></Sec>
       <Sec title="Follow-up"><Row k="Clinic / specialty" v={d.followUp} /><Row k="Repeat investigations" v={d.repeatInv} /><Row k="Wound / device care" v={d.woundCare} /><Row k="Rehabilitation" v={d.rehab} /><Row k="Medical certificate" v={d.mc} /></Sec>

@@ -118,6 +118,7 @@ function PatientPage() {
 
           <Panel id="summary" title="Clinical Summary">
             <TextField multiline label="Presenting problem" value={p.presentingProblem} onChange={t("presentingProblem")} />
+            <TextField label="SOFA2 score on admission" type="number" value={p.admissionSofa2} onChange={t("admissionSofa2")} />
             <TextField multiline label="Reason for HDW admission" value={p.hdwReason} onChange={t("hdwReason")} />
             <Grid>
               <TextField label="Main Diagnoses" value={p.primaryDx} onChange={t("primaryDx")} />
@@ -127,6 +128,7 @@ function PatientPage() {
             <TextField multiline label="Clinical progress" value={p.progress} onChange={t("progress")} />
             <div className="space-y-3">
               <p className="label-caps text-primary">Current condition</p>
+              <TextField label="SOFA2 score at transfer or discharge" type="number" value={p.currentCondition.sofa2} onChange={condition("sofa2")} />
               <Grid>
                 <TextField label="Blood pressure (mmHg)" value={p.currentCondition.bloodPressure} onChange={condition("bloodPressure")} />
                 <TextField label="Heart rate (/min)" value={p.currentCondition.heartRate} onChange={condition("heartRate")} />
