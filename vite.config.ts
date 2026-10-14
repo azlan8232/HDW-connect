@@ -7,6 +7,9 @@
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 
 export default defineConfig({
+  // Keep SPA prerendering and .output/public identical on local and hosted builds.
+  // Netlify serves the static shell; its Drive function is built separately.
+  nitro: { preset: "cloudflare-module" },
   vite: {
     base: process.env.VITE_BASE_PATH ?? "/",
   },
